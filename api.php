@@ -15,6 +15,11 @@ switch ($metodo) {
         $controller->registrar($data);
         break;
 
+    case 'PUT':
+        $data = json_decode(file_get_contents("php://input"), true);
+        $controller->actualizar($data);
+        break;
+
     case 'DELETE':
         $id = $_GET['id'] ?? null;
         if ($id) {
