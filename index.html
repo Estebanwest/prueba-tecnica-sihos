@@ -7,9 +7,10 @@
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Estilos Personalizados CSS -->
+
+    <!-- Estilos Personalizados (Soporta ruta dentro de css/ o en la raíz) -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-light">
 
@@ -24,7 +25,7 @@
         <div class="row mb-3">
             <div class="col-12 text-center">
                 <h2 class="fw-bold text-dark">Gestión de Pacientes</h2>
-                <p class="text-muted">Módulo de registro y consulta de la API RESTful</p>
+                <p class="text-muted">Módulo completo con Búsqueda, Paginación y Validaciones Avanzadas</p>
             </div>
         </div>
 
@@ -32,47 +33,62 @@
         <div id="alertMessage" class="alert d-none shadow-sm" role="alert"></div>
 
         <div class="row">
-            <!-- Formulario de Registro (POST) -->
+            <!-- Formulario de Registro / Edición -->
             <div class="col-lg-5 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">Registrar Nuevo Paciente</h5>
+                        <h5 class="card-title mb-0" id="formTitle">Registrar Nuevo Paciente</h5>
                     </div>
                     <div class="card-body p-4">
-                        <form id="patientForm">
+                        <form id="patientForm" novalidate>
+                            <input type="hidden" id="patientId">
+                            
                             <div class="mb-3">
                                 <label for="nombre" class="form-label fw-semibold">Nombre Completo *</label>
                                 <input type="text" class="form-control" id="nombre" placeholder="Ej. Juan Pérez" required>
+                                <div class="invalid-feedback">Ingresa un nombre válido (mínimo 3 letras, solo texto).</div>
                             </div>
                             <div class="mb-3">
                                 <label for="documento" class="form-label fw-semibold">Documento de Identidad *</label>
                                 <input type="text" class="form-control" id="documento" placeholder="Ej. 10102030" required>
+                                <div class="invalid-feedback">El documento debe ser numérico (entre 6 y 12 dígitos).</div>
                             </div>
                             <div class="mb-3">
                                 <label for="correo" class="form-label fw-semibold">Correo Electrónico *</label>
                                 <input type="email" class="form-control" id="correo" placeholder="ejemplo@correo.com" required>
+                                <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="telefono" class="form-label fw-semibold">Teléfono</label>
                                 <input type="text" class="form-control" id="telefono" placeholder="Ej. 3001234567">
+                                <div class="invalid-feedback">El teléfono debe contener solo números (entre 7 y 10 dígitos).</div>
                             </div>
                             <div class="mb-3">
                                 <label for="fecha_nacimiento" class="form-label fw-semibold">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control" id="fecha_nacimiento">
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Guardar Paciente</button>
+                            
+                            <button type="submit" id="btnSubmit" class="btn btn-primary w-100 py-2 fw-bold">Guardar Paciente</button>
+                            <button type="button" id="btnCancel" class="btn btn-secondary w-100 py-2 fw-bold mt-2 d-none">Cancelar Edición</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Listado de Pacientes (GET) -->
+            <!-- Listado, Buscador y Paginación -->
             <div class="col-lg-7">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-secondary text-white">
-                        <h5 class="card-title mb-0">Listado de Pacientes Registrados</h5>
+                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Listado de Pacientes</h5>
                     </div>
                     <div class="card-body p-4">
+                        
+                        <!-- Buscador por nombre o correo -->
+                        <div class="mb-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="🔍 Buscar por nombre o correo electrónico...">
+                        </div>
+
+                        <!-- Tabla de Pacientes -->
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-dark">
@@ -80,21 +96,30 @@
                                         <th>Documento</th>
                                         <th>Nombre</th>
                                         <th>Correo</th>
-                                        <th class="text-center">Acción</th>
+                                        <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="patientsTableBody">
-                                    <!-- Los registros se cargan dinámicamente mediante app.js -->
+                                    <!-- Datos dinámicos cargados por app.js -->
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Controles de Paginación -->
+                        <nav class="mt-3 d-flex justify-content-between align-items-center">
+                            <small class="text-muted" id="pageInfo">Página 1 de 1</small>
+                            <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                                <!-- Botones de páginas dinámicos -->
+                            </ul>
+                        </nav>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Script de interacción JS -->
+    <!-- Script de interacción AJAX/JS -->
     <script src="app.js"></script>
 </body>
 </html>
